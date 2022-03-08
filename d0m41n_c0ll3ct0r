@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#Date: 08/03/2022
+#Author: Fr4nk3nst3in
+
+#############################################################################
+echo "----------------------------Requred tools------------------------------"
+echo "assetfinder (github)"
+echo "httprobe (github) "
+echo "golang (apt install golang)"
+echo "-----------------------------------------------------------------------"
+
+read -p "enter the url: " u
+~/go/bin/assetfinder -subs-only $u > $u.txt  
+c=$(cat $u.txt|uniq -u )
+cat $u.txt |$HOME/go/bin/httprobe > probe.$u.txt 
+
+cat probe.$u.txt| cut -d ":" -f 2 | tr -d "/" > output.$u.txt 
+
+a=$(cat output.$u.txt|sort -u )
+echo "#######################################################################"
+echo " 		                Available Domains	               	     "
+echo "#######################################################################"
+for b in $c
+do
+	echo $b
+done
+echo "#######################################################################"
+echo "				Live Domains 	                             "
+echo "#######################################################################"
+for i in $a
+do
+	echo $i 
+done
+echo "#######################################################################"
+date
+echo "#######################################################################"
+#rm $u.txt
+rm probe.$u.txt
+rm output.$u.txt
+
